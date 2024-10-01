@@ -24,7 +24,7 @@ const generateSharableUrl = async (req, res) => {
         .json({ message: "Error in Generating URL", error: error, data: "" });
     }
 
-    const url = `http://localhost:3000/api/story/share/${uniqueId}/${slideNumber}`;
+    const url = `https://share-story-x.vercel.app/api/story/share/${uniqueId}/${slideNumber}`;
     return res
       .status(200)
       .json({
