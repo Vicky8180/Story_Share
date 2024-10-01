@@ -1,0 +1,203 @@
+.storylist_container {
+  padding: 20px;
+  /* max-width: 1200px; */
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center;  */
+  position: relative;
+  top: 50px;
+}
+
+.storylist_heading {
+  /* font-size: 24px; */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 4vh;
+
+  font-size: 3vh;
+
+  box-sizing: border-box;
+
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 4vh;
+}
+
+.storylist_box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2vh;
+  justify-content: center;
+  align-content: center;
+  margin-bottom: 10px;
+  justify-items: center;
+  align-items: center;
+
+  justify-content: center;
+  align-content: center;
+}
+
+.each_story {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  /* height: 300px; */
+margin-bottom: 3vh;
+  width: 33vh;
+  height: 54vh;
+  text-align: center;
+  /* background-image: 
+    linear-gradient(to bottom, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0.288) 20%, rgb(0, 0, 0) 98%, rgb(0, 0, 0) 100%),
+    url('https://www.ramana-maharshi.org/wp-content/uploads/2024/01/mj_17220_3.jpg'); */
+
+  /* background-image:
+     linear-gradient(to bottom, rgb(0, 0, 0) 5%, rgb(107 101 101 / 0%) 65%, rgb(0 0 0) 90%, rgb(0, 0, 0) 100%),
+     url(https://www.ramana-maharshi.org/wp-content/uploads/2024/01/mj_17220_3.jpg); */
+  border-radius: 10px;
+  /* overflow: hidden; */
+  color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.each_story_des {
+  position: absolute;
+  bottom: 4%;
+  width: 94%;
+  height: 12%;
+  text-align: left;
+  padding-left: 3%;
+  /* font-size: 11px; */
+  background-color: rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+
+  font-size: 1.3vh; /* Responsive font size based on viewport width */
+  background-color: rgba(0, 0, 0, 0.8);
+
+  box-sizing: border-box;
+
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.8vh;
+}
+
+.each_story_heading {
+  position: absolute;
+  width: 94%;
+  padding-left: 3%;
+  bottom: 15%;
+  /* left: 10px; */
+  text-align: left;
+
+  font-size: 1.9vh;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.1);
+
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 4vh;
+}
+
+.storylist_btn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.storylist_btn button {
+  margin-top: 30px;
+  width: 90px;
+  height: 4vh;
+  border-radius: 20px;
+  background-color: rgba(255, 115, 115, 1);
+  color: white;
+
+  border: none;
+}
+
+.storylist_edit_button {
+  position: relative;
+  display: inline-flex;
+  width: 10vh;
+  height: 4vh;
+  border: none;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  background-color: rgb(255, 255, 255);
+  /* top: 95%; */
+  bottom: 2vh;
+  z-index: 5;
+  color: rgba(0, 0, 0, 1);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0.7vh;
+  border-radius: 5vh;
+
+  font-size: 1.9vh;
+  font-weight: bold;
+
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  /* line-height: 4vh; */
+}
+
+.each_story {
+  transition: transform 0.2s ease-in-out;
+}
+.each_story:hover {
+  cursor: pointer;
+  transform: scale(1.08);
+}
+
+.storylist_edit_button {
+  transition: transform 0.2s ease-in-out;
+}
+
+.storylist_edit_button:hover {
+  cursor: pointer;
+  transform: scale(1.08);
+}
+
+@media (max-width: 1200px) {
+  .storylist_box {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .storylist_box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .storylist_box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 550px) {
+  .storylist_box {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .each_story {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    /* height: 300px; */
+
+    width: 100%;
+    height: 61vh;
+    border-radius: 10px;
+    /* overflow: hidden; */
+    color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
