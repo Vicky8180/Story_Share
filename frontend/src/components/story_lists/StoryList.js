@@ -60,7 +60,7 @@ export default function StoryList({ loggedIn, heading, stories }) {
               key={index}
               style={{
                 backgroundImage: `
-                linear-gradient(to bottom, rgb(0, 0, 0) 0.1%, rgba(107, 101, 101, 0) 65%, rgb(0, 0, 0) 90%, rgb(0, 0, 0) 100%),
+                  linear-gradient(to bottom, rgb(0, 0, 0) 0.1%, rgba(107, 101, 101, 0) 65%, rgb(0, 0, 0) 90%, rgb(0, 0, 0) 100%),
                 url(${item.thumbnail})
               `,
               }}

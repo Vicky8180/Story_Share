@@ -65,7 +65,7 @@ margin-bottom: 3vh;
 .each_story_des {
   position: absolute;
   bottom: 4%;
-  width: 94%;
+  width: 97%;
   height: 12%;
   text-align: left;
   padding-left: 3%;
@@ -87,7 +87,7 @@ margin-bottom: 3vh;
 
 .each_story_heading {
   position: absolute;
-  width: 94%;
+  width: 97%;
   padding-left: 3%;
   bottom: 15%;
   /* left: 10px; */

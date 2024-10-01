@@ -9,7 +9,7 @@ const checkMediaType = async (url) => {
     if (result.type === "video") {
       mediaType = "video";
       duration = result.duration;
-      if (result.duration > 17.0) {
+      if (result.duration > 15.0) {
         error = "Video length is more than 15 seconds";
       }
 

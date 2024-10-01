@@ -4,7 +4,7 @@ import ASDeleteIcon from "../../assets/ASDeleteIcon.png";
 import checkMediaType from "../../services/MediaMetaData";
 import axios from "axios";
 import showToast from "../../services/toast/Toast";
-
+import { useNavigate } from "react-router-dom";
 export default function AddStory({ close, previousData, editingEnable }) {
   const [duration, setDuration] = useState(null);
   const [mediaType, setMediaType] = useState("");
@@ -17,7 +17,8 @@ export default function AddStory({ close, previousData, editingEnable }) {
   const [slideNumber, setSlideNumber] = useState([0, 1, 2]);
   const [selectedSlide, setSelectedSlide] = useState(0);
   const [isSelected, setIsSelected] = useState(false);
-  
+   const navigate =useNavigate()
+
   useEffect(() => {
     if (previousData) {
     
@@ -83,6 +84,9 @@ export default function AddStory({ close, previousData, editingEnable }) {
         );
      
         showToast(response.data.message, true);
+        close()
+        window.location.reload()
+        navigate("/admin")
       } else {
         showToast("Fields are empty", false);
       }
@@ -384,6 +388,9 @@ export default function AddStory({ close, previousData, editingEnable }) {
           }
         );
         showToast(res.data.message, true);
+        close()
+        window.location.reload()
+        navigate("/admin")
       } else {
         showToast("All fileds must be filled", false);
       }
