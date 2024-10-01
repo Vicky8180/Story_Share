@@ -14,7 +14,8 @@ db();
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "",
+  "https://share-story-x.vercel.app",
+
   "http://another-origin.com",
 ];
 
