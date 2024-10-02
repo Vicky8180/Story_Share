@@ -49,6 +49,7 @@ export default function HomePage() {
 
           {loggedin && yourStories && yourStories.length > 0 ? (
             <StoryList
+          
               loggedIn={true}
               heading={"Your Stories"}
               stories={yourStories}
@@ -57,8 +58,9 @@ export default function HomePage() {
             <></>
           )}
           {storyByCategory &&
-            storyByCategory.storyByCategory.map((item) => (
+            storyByCategory.storyByCategory.map((item, idx) => (
               <StoryList
+              key={idx}
                 loggedIn={false}
                 heading={item._id}
                 stories={item.stories}

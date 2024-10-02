@@ -17,7 +17,7 @@ export default function AddStory({ close, previousData, editingEnable }) {
   const [slideNumber, setSlideNumber] = useState([0, 1, 2]);
   const [selectedSlide, setSelectedSlide] = useState(0);
   const [isSelected, setIsSelected] = useState(false);
-  const [errorArray,setErrorArray]=useState([]);;
+  const [errorArray, setErrorArray] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function AddStory({ close, previousData, editingEnable }) {
         storyArray.length >= 3 &&
         eachSlideValidation(heading, description, selectedCategory, link)
           .success &&
-        errorArray.length===0
+        errorArray.length === 0
       ) {
         const response = await axios.post(
           `${process.env.REACT_APP_BASE_URL_PORT}/api/story/create`,
@@ -85,25 +85,27 @@ export default function AddStory({ close, previousData, editingEnable }) {
             },
           }
         );
-       
+
         showToast(response.data.message, true);
         close();
         window.location.reload();
         navigate("/admin");
       } else {
-        if(errorArray.length>0){
-           return showToast(`Slide ${errorArray[0].id} ${errorArray[0].message}`,false )
+        if (errorArray.length > 0) {
+          return showToast(
+            `Slide ${errorArray[0].id} ${errorArray[0].message}`,
+            false
+          );
         }
-        if(!eachSlideValidation.success){
-         return  showToast(
+        if (!eachSlideValidation.success) {
+          return showToast(
             error ||
               eachSlideValidation(heading, description, selectedCategory, link)
                 .message ||
               "Fileds are empty",
             false
-          )
+          );
         }
-        ;
       }
     } catch (error) {
       showToast(error.response.data.message, false);
@@ -111,6 +113,7 @@ export default function AddStory({ close, previousData, editingEnable }) {
   };
 
   const handleChangeHeading = (event) => {
+    handleChangeCategoryNewForCall();
     const newHeading = event.target.value;
     setHeading(newHeading);
 
@@ -125,6 +128,7 @@ export default function AddStory({ close, previousData, editingEnable }) {
   };
 
   const handleChangeDescription = (event) => {
+    handleChangeCategoryNewForCall();
     const newDescription = event.target.value;
     setDescription(newDescription);
 
@@ -148,6 +152,7 @@ export default function AddStory({ close, previousData, editingEnable }) {
   }, [selectedSlide, link]);
 
   const handleChangeLink = async (event) => {
+    handleChangeCategoryNewForCall();
     const newLink = event.target.value;
     setLink(newLink);
 
@@ -161,9 +166,9 @@ export default function AddStory({ close, previousData, editingEnable }) {
     });
     var data;
     if (newLink) {
-   data  = await checkMediaType(newLink);
-      setError(()=>{
-        return data.error
+      data = await checkMediaType(newLink);
+      setError(() => {
+        return data.error;
       });
       setDuration(data.duration);
       setMediaType(data.mediaType);
@@ -179,29 +184,29 @@ export default function AddStory({ close, previousData, editingEnable }) {
       });
     }
 
-  
-    
     setErrorArray((prevErrorArray) => {
-      console.log(data)
-      if ( data && data.error !== "") {
-  
-        const existingErrorIndex = prevErrorArray.findIndex((err) => err.id === selectedSlide);
-    
+      if (data && data.error !== "") {
+        const existingErrorIndex = prevErrorArray.findIndex(
+          (err) => err.id === selectedSlide
+        );
+
         if (existingErrorIndex !== -1) {
-       
           const updatedErrorArray = [...prevErrorArray];
-          updatedErrorArray[existingErrorIndex] = { id: selectedSlide, message: data.error};
+          updatedErrorArray[existingErrorIndex] = {
+            id: selectedSlide,
+            message: data.error,
+          };
           return updatedErrorArray;
         } else {
-      
-          return [...prevErrorArray, { id: selectedSlide, message: data.error}];
+          return [
+            ...prevErrorArray,
+            { id: selectedSlide, message: data.error },
+          ];
         }
       } else {
-    
         return prevErrorArray.filter((err) => err.id !== selectedSlide);
       }
     });
-    
   };
 
   const handleChangeCategory = (event) => {
@@ -209,10 +214,7 @@ export default function AddStory({ close, previousData, editingEnable }) {
     setSelectedCategory(() => {
       return newCategory;
     });
-    // error exist here
-
     setIsSelected(newCategory !== "");
-
     setStoryArray((prevStoryArray) => {
       const updatedStoryArray = [...prevStoryArray];
       updatedStoryArray.forEach((item) => {
@@ -220,52 +222,20 @@ export default function AddStory({ close, previousData, editingEnable }) {
       });
       return updatedStoryArray;
     });
-
-
-
-
   };
- 
-  const updateSlidesInArray = () => {
-    setIsSelected(selectedCategory !== "");
-    if (
-      error === "" &&
-      eachSlideValidation(heading, description, selectedCategory, link).success
-    ) {
-      if (selectedSlide < slideNumber.length - 1) {
-        setSelectedSlide((prevSlide) => {
-          settingCurrentInputsFun(prevSlide + 1);
-          return prevSlide + 1;
-        });
-      }
-      if (
-        previousData &&
-        previousData.each_slides.length >= slideNumber.length
-      ) {
-        setHeading(previousData.each_slides[selectedSlide].heading || "");
-        setDescription(
-          previousData.each_slides[selectedSlide].description || ""
-        );
-        setLink(previousData.each_slides[selectedSlide].link || "");
-        setMediaType(previousData.each_slides[selectedSlide].mediaType || "");
-        setDuration(previousData.each_slides[selectedSlide].duration || null);
-        setSelectedCategory("");
-      } else {
-        setHeading("");
-        setDescription("");
-        setLink("");
-        setMediaType("");
-        setDuration(null);
-        setSelectedCategory("");
-      }
-    } else {
-      const message =
-        error ||
-        eachSlideValidation(heading, description, selectedCategory, link)
-          .message ||
-        "Please fill all field or change the category";
-      showToast(message, false);
-    }
+
+  const handleChangeCategoryNewForCall = () => {
+    // setIsSelected(newCategory !== "");
+    setStoryArray((prevStoryArray) => {
+      const updatedStoryArray = [...prevStoryArray];
+      updatedStoryArray.forEach((item) => {
+        // console.log(item)
+        if (item) {
+          item.category = selectedCategory ? selectedCategory : "Food";
+        }
+      });
+      return updatedStoryArray;
+    });
   };
 
   const eachSlideValidation = (
@@ -291,6 +261,7 @@ export default function AddStory({ close, previousData, editingEnable }) {
   };
 
   const prevButton = () => {
+    handleChangeCategoryNewForCall();
     setIsSelected(selectedCategory !== "");
     if (selectedSlide >= 1) {
       setSelectedSlide((prevSlide) => {
@@ -304,38 +275,32 @@ export default function AddStory({ close, previousData, editingEnable }) {
     // onSlide(slideNumber.length)
     setIsSelected(selectedCategory !== "");
     setSlideNumber((prev) => {
-      if(storyArray.length>=3){
+      if (storyArray.length >= 3) {
         return [...prev, prev.length];
-      }else {
-        showToast("Please fill first 3 slides", false)
-        return prev
+      } else {
+        showToast("Please fill first 3 slides", false);
+        return prev;
       }
-     
     });
 
     setSelectedSlide((prev) => {
-      if(storyArray.length>=3){
+      if (storyArray.length >= 3) {
         return slideNumber.length;
-      }else {
-        return prev
+      } else {
+        return prev;
       }
-     
     });
-    
-    if(storyArray.length>=3){
+
+    if (storyArray.length >= 3) {
       setHeading("");
       setDescription("");
       setLink("");
       setMediaType("");
       setDuration(null);
-      setSelectedCategory("");
+      // setSelectedCategory("");
+      setSelectedCategory(selectedCategory);
     }
-
-  
-      
   };
-
-console.log(storyArray)
 
   const RemoveSlides = (slide) => {
     setSlideNumber((prevSlides) => {
@@ -350,82 +315,115 @@ console.log(storyArray)
     );
   };
 
+  const updateSlidesInArray = () => {
+    handleChangeCategoryNewForCall();
+    setIsSelected(selectedCategory !== "");
+    if (
+      eachSlideValidation(heading, description, selectedCategory, link).success
+    ) {
+      setSelectedSlide((prev) => {
+        if (slideNumber.length - 1 > selectedSlide) {
+          return prev + 1;
+        } else {
+          return prev;
+        }
+      });
 
+      if (previousData && previousData.each_slides.length > selectedSlide + 1) {
+        const slideData = previousData.each_slides[selectedSlide] || {};
+        setHeading(
+          slideData.heading || storyArray[selectedSlide]?.heading || ""
+        );
+        setDescription(
+          slideData.description || storyArray[selectedSlide]?.description || ""
+        );
+        setLink(slideData.link || storyArray[selectedSlide]?.link || "");
+        setMediaType(
+          slideData.mediaType || storyArray[selectedSlide]?.mediaType || ""
+        );
+        setDuration(
+          slideData.duration || storyArray[selectedSlide]?.duration || null
+        );
+        // setSelectedCategory("");
+        setSelectedCategory(
+          previousData.category || storyArray[selectedSlide]?.category || ""
+        );
+      } else {
+        if (slideNumber.length - 1 > selectedSlide) {
+          setHeading(storyArray[selectedSlide + 1]?.heading || "");
+          setDescription(storyArray[selectedSlide + 1]?.description || "");
+          setLink(storyArray[selectedSlide + 1]?.link || "");
+          setMediaType(storyArray[selectedSlide + 1]?.mediaType || "");
+          setDuration(storyArray[selectedSlide + 1]?.duration || null);
+          // setSelectedCategory("");
+          setSelectedCategory(
+            selectedCategory || storyArray[selectedSlide + 1]?.category || ""
+          );
+        }
+      }
+    } else {
+      const message =
+        eachSlideValidation(heading, description, selectedCategory, link)
+          .message || "Please fill all field or change the category";
+      showToast(message, false);
+    }
+  };
 
   const onSlide = (slide) => {
-  
-  
-    
+    handleChangeCategoryNewForCall();
 
-    if(storyArray.length<slide){
+    if (storyArray.length < slide) {
       return showToast(`First fill previous ${slide} slides `, false);
     }
-   
+
     if (selectedSlide < slide) {
       setSelectedSlide(slide);
       settingCurrentInputsFun(slide);
       setIsSelected(selectedCategory !== "");
-  
+
       if (previousData && previousData.each_slides.length > slide) {
-   
         const slideData = previousData.each_slides[slide] || {};
         setHeading(slideData.heading || storyArray[slide]?.heading || "");
-        setDescription(slideData.description || storyArray[slide]?.description || "");
+        setDescription(
+          slideData.description || storyArray[slide]?.description || ""
+        );
         setLink(slideData.link || storyArray[slide]?.link || "");
         setMediaType(slideData.mediaType || storyArray[slide]?.mediaType || "");
         setDuration(slideData.duration || storyArray[slide]?.duration || null);
+        // setSelectedCategory("");
+        setSelectedCategory(
+          previousData.category || storyArray[slide]?.category || ""
+        );
       } else if (selectedSlide > slide) {
-       
         settingCurrentInputsFun(slide);
       } else {
-       
         setHeading(storyArray[slide]?.heading || "");
-        setDescription( storyArray[slide]?.description || "");
-        setLink( storyArray[slide]?.link || "");
+        setDescription(storyArray[slide]?.description || "");
+        setLink(storyArray[slide]?.link || "");
         setMediaType(storyArray[slide]?.mediaType || "");
         setDuration(storyArray[slide]?.duration || null);
-        setSelectedCategory("");
+        // setSelectedCategory("");
+        setSelectedCategory(
+          selectedCategory || storyArray[slide]?.category || ""
+        );
       }
     } else {
-      
       setSelectedSlide(slide);
       settingCurrentInputsFun(slide);
       setIsSelected(selectedCategory !== "");
     }
   };
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const settingCurrentInputsFun = (slide) => {
-    const data = storyArray[slide];
+    const data =
+      (previousData && previousData.each_slides[slide]) || storyArray[slide];
     if (data !== undefined) {
       setHeading(data.heading);
       setDescription(data.description);
       setLink(data.link);
-      // setSelectedCategory(data.selectedCategory);
-      setSelectedCategory("");
+      setSelectedCategory(selectedCategory || data.category || "");
+      // setSelectedCategory("");
+      // selectedCategory||storyArray[slide]?.category||"")
     }
   };
 
@@ -434,16 +432,10 @@ console.log(storyArray)
       showToast("You must add at least 3 slides.", false);
       return false;
     }
-  
-    // if (error) {
-    //    return showToast(error, false);
-    // }
 
     for (let i = 0; i < storyArray.length; i++) {
       const slide = storyArray[i];
-  
 
-      console.log(slide)
       if (
         !slide.heading ||
         !slide.description ||
@@ -468,7 +460,7 @@ console.log(storyArray)
         storyArray.length >= 3 &&
         eachSlideValidation(heading, description, selectedCategory, link)
           .success &&
-        errorArray.length===0
+        errorArray.length === 0
       ) {
         const res = await axios.post(
           `${process.env.REACT_APP_BASE_URL_PORT}/api/story/update`,
@@ -484,19 +476,22 @@ console.log(storyArray)
         window.location.reload();
         navigate("/admin");
       } else {
-        console.log(errorArray)
-        if(errorArray.length>0){
-          return showToast(`Slide ${errorArray[0].id+1} ${errorArray[0].message}`,false )
-       }
-       if(!eachSlideValidation.success){
-        return  showToast(
-           error ||
-             eachSlideValidation(heading, description, selectedCategory, link)
-               .message ||
-             "Fileds are empty",
-           false
-         )
-       }
+        console.log(errorArray);
+        if (errorArray.length > 0) {
+          return showToast(
+            `Slide ${errorArray[0].id + 1} ${errorArray[0].message}`,
+            false
+          );
+        }
+        if (!eachSlideValidation.success) {
+          return showToast(
+            error ||
+              eachSlideValidation(heading, description, selectedCategory, link)
+                .message ||
+              "Fileds are empty",
+            false
+          );
+        }
       }
     } catch (error) {
       showToast(error.response.data.message, false);

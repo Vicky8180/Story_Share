@@ -263,9 +263,9 @@ export default function ViewStory({
   const handleClose = () => {
     resetState();
     close();
-    if (loggedin) {
-      navigate("/admin");
-    }
+    // if (loggedin) {
+    //   navigate("/admin");
+    // }
   };
 
   const [touchStart, setTouchStart] = useState(0);

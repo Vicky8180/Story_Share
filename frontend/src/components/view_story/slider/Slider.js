@@ -68,7 +68,7 @@ export default function Slider({
             flex: `1 1 calc(${100 / each_slides.length}% - 10px)`,
             backgroundColor:
               data2 && data2.includes(index)
-                ? "green"
+                ? "rgba(115, 171, 255, 1)"
                 : "rgba(217, 217, 217, 0.5)",
             position: "relative",
           }}

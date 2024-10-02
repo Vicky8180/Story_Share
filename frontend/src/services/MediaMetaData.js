@@ -31,7 +31,7 @@ const determineMediaType = (url) => {
   return new Promise((resolve, reject) => {
     const videoExtensions = ["mp4", "webm", "ogg", "mov", "mkv"];
     const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp"];
-   console.log(url)
+  //  console.log(url)
     if(url===undefined){
       reject(new Error("Can't be empty"));
     }
