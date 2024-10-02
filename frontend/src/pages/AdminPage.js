@@ -56,7 +56,6 @@ export default function HomePage() {
           ) : (
             <></>
           )}
-          {console.log(loggedin)}
           {storyByCategory &&
             storyByCategory.storyByCategory.map((item) => (
               <StoryList

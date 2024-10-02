@@ -17,11 +17,10 @@ export default function AddStory({ close, previousData, editingEnable }) {
   const [slideNumber, setSlideNumber] = useState([0, 1, 2]);
   const [selectedSlide, setSelectedSlide] = useState(0);
   const [isSelected, setIsSelected] = useState(false);
-   const navigate =useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (previousData) {
-    
       setSelectedCategory(() => {
         return previousData.category || "";
       });
@@ -41,8 +40,6 @@ export default function AddStory({ close, previousData, editingEnable }) {
 
         return tempArray;
       });
-
-   
       if (previousData.each_slides && previousData.each_slides.length > 0) {
         const firstSlide = previousData.each_slides[0];
         setHeading(firstSlide.heading || "");
@@ -72,7 +69,12 @@ export default function AddStory({ close, previousData, editingEnable }) {
       const user_id = localStorage.getItem("user_id");
 
       const token = localStorage.getItem("token");
-      if (storyArray.length >= 3 && error === "") {
+      if (
+        storyArray.length >= 3 &&
+        eachSlideValidation(heading, description, selectedCategory, link)
+          .success &&
+        error === ""
+      ) {
         const response = await axios.post(
           `${process.env.REACT_APP_BASE_URL_PORT}/api/story/create`,
           { storyArray, user_id },
@@ -82,13 +84,19 @@ export default function AddStory({ close, previousData, editingEnable }) {
             },
           }
         );
-     
+
         showToast(response.data.message, true);
-        close()
-        window.location.reload()
-        navigate("/admin")
+        close();
+        window.location.reload();
+        navigate("/admin");
       } else {
-        showToast("Fields are empty", false);
+        showToast(
+          error ||
+            eachSlideValidation(heading, description, selectedCategory, link)
+              .message ||
+            "Fileds are empty",
+          false
+        );
       }
     } catch (error) {
       showToast(error.response.data.message, false);
@@ -122,6 +130,15 @@ export default function AddStory({ close, previousData, editingEnable }) {
       return updatedStoryArray;
     });
   };
+
+  const initialCheckmedia = async (newLink) => {
+    const data = await checkMediaType(newLink);
+    setError(data.error);
+  };
+
+  useEffect(() => {
+    initialCheckmedia(link);
+  }, [selectedSlide, link]);
 
   const handleChangeLink = async (event) => {
     const newLink = event.target.value;
@@ -170,18 +187,13 @@ export default function AddStory({ close, previousData, editingEnable }) {
       return updatedStoryArray;
     });
   };
-  // useEffect(()=>{
-  //   handleChangeCategory()
-  // },[selectedCategory])
+
   const updateSlidesInArray = () => {
-    if (error === "" && heading && description && selectedCategory && link) {
-      const temp = {
-        heading,
-        description,
-        link,
-        duration,
-        category: selectedCategory,
-      };
+    setIsSelected(selectedCategory !== "");
+    if (
+      error === "" &&
+      eachSlideValidation(heading, description, selectedCategory, link).success
+    ) {
       if (selectedSlide < slideNumber.length - 1) {
         setSelectedSlide((prevSlide) => {
           settingCurrentInputsFun(prevSlide + 1);
@@ -199,10 +211,7 @@ export default function AddStory({ close, previousData, editingEnable }) {
         setLink(previousData.each_slides[selectedSlide].link || "");
         setMediaType(previousData.each_slides[selectedSlide].mediaType || "");
         setDuration(previousData.each_slides[selectedSlide].duration || null);
-        setSelectedCategory(
-          previousData.each_slides[selectedSlide].category || ""
-        );
-        // setSelectedCategory( "")
+        setSelectedCategory("");
       } else {
         setHeading("");
         setDescription("");
@@ -212,14 +221,39 @@ export default function AddStory({ close, previousData, editingEnable }) {
         setSelectedCategory("");
       }
     } else {
-      const message = error || "Fill all fileds";
+      const message =
+        error ||
+        eachSlideValidation(heading, description, selectedCategory, link)
+          .message ||
+        "Please fill all field or change the category";
       showToast(message, false);
     }
+  };
 
-    // setStoryArray([...storyArray, temp]);
+  const eachSlideValidation = (
+    heading,
+    description,
+    selectedCategory,
+    link
+  ) => {
+    if (!heading) {
+      return { success: false, message: "Heading field is empty" };
+    }
+    if (!description) {
+      return { success: false, message: "Description field is empty" };
+    }
+    if (!selectedCategory) {
+      return { success: false, message: "Category field is empty" };
+    }
+    if (!link) {
+      return { success: false, message: "Link field is empty" };
+    }
+
+    return { success: true, message: "" };
   };
 
   const prevButton = () => {
+    setIsSelected(selectedCategory !== "");
     if (selectedSlide >= 1) {
       setSelectedSlide((prevSlide) => {
         settingCurrentInputsFun(prevSlide - 1);
@@ -229,47 +263,22 @@ export default function AddStory({ close, previousData, editingEnable }) {
   };
 
   const AddSlides = () => {
-    // setSlideNumber((prev)=>{
-    //   return [...prev, prev.length]
-    // });
-    // setSelectedSlide(()=>{
-    //   console.log(slideNumber)
-    //   return slideNumber.length
-    // })
-
+    // onSlide(slideNumber.length)
+    setIsSelected(selectedCategory !== "");
     setSlideNumber((prev) => {
-      return [...prev, prev.length]; // Adds the next slide number to the array
+      return [...prev, prev.length];
     });
 
     setSelectedSlide((prev) => {
-      return slideNumber.length; // Sets selectedSlide to the length of the updated slideNumber array
+      return slideNumber.length;
     });
-    //   if(previousData){
-    //     if(previousData.each_slides.length>slideNumber.length){
-
-    //       setHeading(previousData.each_slides[selectedSlide].heading || "");
-    //       setDescription(previousData.each_slides[selectedSlide].description || "");
-    //       setLink(previousData.each_slides[selectedSlide].link || "");
-    //       setMediaType(previousData.each_slides[selectedSlide].mediaType || "");
-    //       setDuration(previousData.each_slides[selectedSlide].duration || null);
-    //       setSelectedCategory(previousData.each_slides[selectedSlide].category  || "")
-    //     }
-    //   }
-    //  else {
-    //     setHeading("");
-    //     setDescription("");
-    //     setLink( "");
-    //     setMediaType( "");
-    //     setDuration( null);
-    //     // setSelectedCategory( "")
-    //   }
 
     setHeading("");
     setDescription("");
     setLink("");
     setMediaType("");
     setDuration(null);
-    // setSelectedCategory( "")
+    setSelectedCategory("");
   };
 
   const RemoveSlides = (slide) => {
@@ -286,49 +295,59 @@ export default function AddStory({ close, previousData, editingEnable }) {
   };
 
   const onSlide = (slide) => {
-    setSelectedSlide(slide);
-    settingCurrentInputsFun(slide);
-
-    if (previousData) {
-      if (previousData.each_slides.length > slideNumber.length) {
-        setHeading(
-          previousData.each_slides[selectedSlide].heading ||
-            storyArray[selectedSlide].heading ||
-            ""
-        );
-        setDescription(
-          previousData.each_slides[selectedSlide].description ||
-            storyArray[selectedSlide].description ||
-            ""
-        );
-        setLink(
-          previousData.each_slides[selectedSlide].link ||
-            storyArray[selectedSlide].link ||
-            ""
-        );
-        setMediaType(
-          previousData.each_slides[selectedSlide].mediaType ||
-            storyArray[selectedSlide].mediaType ||
-            ""
-        );
-        setDuration(
-          previousData.each_slides[selectedSlide].duration ||
-            storyArray[selectedSlide].duration ||
-            null
-        );
-        setSelectedCategory(
-          previousData.each_slides[selectedSlide].category ||
-            storyArray[selectedSlide].category ||
-            ""
-        );
+    if (selectedCategory < slide) {
+      if (error === "") {
+        setSelectedSlide(slide);
+        settingCurrentInputsFun(slide);
+        setIsSelected(selectedCategory !== "");
+        if (previousData) {
+          if (previousData.each_slides.length > slideNumber.length) {
+            setHeading(
+              previousData.each_slides[selectedSlide].heading ||
+                storyArray[selectedSlide].heading ||
+                ""
+            );
+            setDescription(
+              previousData.each_slides[selectedSlide].description ||
+                storyArray[selectedSlide].description ||
+                ""
+            );
+            setLink(
+              previousData.each_slides[selectedSlide].link ||
+                storyArray[selectedSlide].link ||
+                ""
+            );
+            setMediaType(
+              previousData.each_slides[selectedSlide].mediaType ||
+                storyArray[selectedSlide].mediaType ||
+                ""
+            );
+            setDuration(
+              previousData.each_slides[selectedSlide].duration ||
+                storyArray[selectedSlide].duration ||
+                null
+            );
+            setSelectedCategory("");
+          }
+        } else {
+          if (selectedSlide > slide) {
+            settingCurrentInputsFun(slide);
+          } else {
+            setHeading("");
+            setDescription("");
+            setLink("");
+            setMediaType("");
+            setDuration(null);
+            setSelectedCategory("");
+          }
+        }
+      } else {
+        return showToast(error, false);
       }
     } else {
-      setHeading("");
-      setDescription("");
-      setLink("");
-      setMediaType("");
-      setDuration(null);
-      setSelectedCategory("");
+      setSelectedSlide(slide);
+      settingCurrentInputsFun(slide);
+      setIsSelected(selectedCategory !== "");
     }
   };
 
@@ -338,7 +357,8 @@ export default function AddStory({ close, previousData, editingEnable }) {
       setHeading(data.heading);
       setDescription(data.description);
       setLink(data.link);
-      setSelectedCategory(data.selectedCategory);
+      // setSelectedCategory(data.selectedCategory);
+      setSelectedCategory("");
     }
   };
 
@@ -361,12 +381,10 @@ export default function AddStory({ close, previousData, editingEnable }) {
         !slide.link ||
         !slide.category
       ) {
-        console.log(slide);
         showToast(`All fields must be filled for slide ${i + 1}.`, false);
         return false;
       }
     }
-
     return true;
   };
 
@@ -377,7 +395,12 @@ export default function AddStory({ close, previousData, editingEnable }) {
     try {
       const story_id = previousData._id;
       const token = localStorage.getItem("token");
-      if (storyArray.length >= 3 && error === "") {
+      if (
+        storyArray.length >= 3 &&
+        eachSlideValidation(heading, description, selectedCategory, link)
+          .success &&
+        error === ""
+      ) {
         const res = await axios.post(
           `${process.env.REACT_APP_BASE_URL_PORT}/api/story/update`,
           { story_id, storyArray },
@@ -388,11 +411,17 @@ export default function AddStory({ close, previousData, editingEnable }) {
           }
         );
         showToast(res.data.message, true);
-        close()
-        window.location.reload()
-        navigate("/admin")
+        close();
+        window.location.reload();
+        navigate("/admin");
       } else {
-        showToast("All fileds must be filled", false);
+        showToast(
+          error ||
+            eachSlideValidation(heading, description, selectedCategory, link)
+              .message ||
+            "Field are empty please change category",
+          false
+        );
       }
     } catch (error) {
       showToast(error.response.data.message, false);

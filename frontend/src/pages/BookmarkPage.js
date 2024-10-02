@@ -151,6 +151,8 @@ export default function BookmarkPage() {
                   close={closeViewStory}
                   storyId={selectedItem.storyId}
                   slideNumber={selectedItem.slideNumber}
+                  bookmarking={true}
+                  bookmarking_id={selectedItem._id}
                 />
               }
             />

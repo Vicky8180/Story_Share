@@ -24,7 +24,13 @@ import { useNavigate } from "react-router-dom";
 import ScaleUpEffect from "../../services/effects/ScaleUp";
 import CopiedEffect from "../../services/effects/CopiEffect";
 import showToast from "../../services/toast/Toast";
-export default function ViewStory({ close, storyId, slideNumber }) {
+export default function ViewStory({
+  close,
+  storyId,
+  slideNumber,
+  bookmarking,
+  bookmarking_id,
+}) {
   const each_slides2 = useSelector((state) => state.each_slides);
   const localSlides = each_slides2.each_slides;
   const ifslideNumberNotUndefined = slideNumber || 0;
@@ -81,21 +87,16 @@ export default function ViewStory({ close, storyId, slideNumber }) {
             },
           }
         );
+
         setBookmarkData(() => {
-          var tempArray = [];
-          const tempResponse = response.data.data.bookmarks;
-
-          const userId = localStorage.getItem("user_id");
-
-          for (let i = 0; i < tempResponse.length; i++) {
-            var tempObj = {};
-            tempObj.slideNumber = tempResponse[i].slideNumber;
-            tempObj.userId = userId;
-            tempObj.storyId = tempResponse[i].storyId._id;
-            tempArray.push(tempObj);
-          }
+          const tempArray = response.data.data.bookmarks.map((bookmark) => ({
+            slideNumber: bookmark.slideNumber,
+            userId,
+            storyId: bookmark.storyId._id,
+          }));
           return tempArray;
         });
+
         isBookmarkedOrNot();
       }
     } catch (error) {
@@ -110,36 +111,30 @@ export default function ViewStory({ close, storyId, slideNumber }) {
   const isBookmarkedOrNot = () => {
     const userId = localStorage.getItem("user_id");
     if (bookmarkData) {
-      const val = bookmarkData.some((bookmarks) => {
-        return (
-          bookmarks.storyId === storyId &&
-          bookmarks.slideNumber === currentSlideIndex &&
-          bookmarks.userId === userId
-        );
-      });
-
-      if (val) {
-        setBookmark(() => {
-          return true;
-        });
-      } else {
-        setBookmark(() => {
-          return false;
-        });
-      }
+      const isBookmarked = bookmarkData.some((bookmarks) =>
+        bookmarks.storyId === bookmarking
+          ? bookmarking_id
+          : storyId &&
+            bookmarks.slideNumber === currentSlideIndex &&
+            bookmarks.userId === userId
+      );
+      //   console.log(bookmarkData)
+      //  console.log(isBookmarked)
+      //  console.log(storyId)
+      //  console.log(currentSlideIndex)
+      //  console.log(userId)
+      setBookmark(isBookmarked);
     }
   };
 
   useEffect(() => {
     isBookmarkedOrNot();
-  }, [bookmarkData, bookmark]);
+  }, [bookmarkData, currentSlideIndex]);
 
   const [openLoginRegister, setOpenLoginRegister] = useState(false);
 
   const BookmarkAndUnbookmarking = () => {
     if (loggedin) {
-      isBookmarkedOrNot();
-
       if (bookmark) {
         UnBookmarkAPI();
       } else {
@@ -148,9 +143,7 @@ export default function ViewStory({ close, storyId, slideNumber }) {
       const bookmark_id = document.getElementById("bookmark_id");
       ScaleUpEffect("bookmark_id");
     } else {
-      setOpenLoginRegister((prev) => {
-        return !prev;
-      });
+      setOpenLoginRegister((prev) => !prev);
     }
   };
 
@@ -159,7 +152,7 @@ export default function ViewStory({ close, storyId, slideNumber }) {
       const userId = localStorage.getItem("user_id");
       const slideNumber = currentSlideIndex;
       const token = localStorage.getItem("token");
-      const response = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_BASE_URL_PORT}/api/story/bookmark`,
         { storyId, slideNumber, userId },
         {
@@ -168,19 +161,18 @@ export default function ViewStory({ close, storyId, slideNumber }) {
           },
         }
       );
-      setBookmark(() => {
-        return true;
-      });
+      setBookmark(true);
     } catch (error) {
       showToast(error.response.data.message, false);
     }
   };
+
   const UnBookmarkAPI = async () => {
     try {
       const userId = localStorage.getItem("user_id");
       const slideNumber = currentSlideIndex;
       const token = localStorage.getItem("token");
-      const response = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_BASE_URL_PORT}/api/story/unbookmark`,
         { storyId, slideNumber, userId },
         {
@@ -189,11 +181,10 @@ export default function ViewStory({ close, storyId, slideNumber }) {
           },
         }
       );
-      setBookmark(() => {
-        return false;
-      });
-      // showToast(response.data.message, true)
-    } catch (error) {}
+      setBookmark(false);
+    } catch (error) {
+      showToast(error.response.data.message, false);
+    }
   };
 
   const leftButtonFun = () => {

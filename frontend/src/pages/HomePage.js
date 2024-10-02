@@ -36,7 +36,7 @@ export default function HomePage() {
   }, []);
 
   const storyByCategory = useSelector((state) => state.storyByCategory);
-
+console.log("Share-Story-X: is live now!")
   return (
     <>
       <NewNavbar />

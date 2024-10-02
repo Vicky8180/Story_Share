@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 
 const checkMediaType = async (url) => {
   let duration = null;
@@ -33,6 +32,9 @@ const determineMediaType = (url) => {
     const videoExtensions = ["mp4", "webm", "ogg", "mov", "mkv"];
     const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp"];
 
+    if(url===""){
+      reject(new Error("Can't be empty"));
+    }
     const extension = url.split(".").pop().toLowerCase();
 
     if (imageExtensions.includes(extension)) {
