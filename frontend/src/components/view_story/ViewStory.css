@@ -173,6 +173,25 @@
   width: 3.3vh;
 }
 
+.viewstory_right{
+  transition: transform 0.3s ease-in-out;
+}
+.viewstory_right:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+  /* background-color: aqua; */
+}
+
+
+.viewstory_left{
+  transition: transform 0.3s ease-in-out;
+}
+.viewstory_left:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+  /* background-color: aqua; */
+}
+
 @media (max-width: 480px) {
   .viewstory_container {
     height: 100vh;

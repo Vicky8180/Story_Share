@@ -68,6 +68,7 @@ export default function Navbar2() {
               navigate("/bookmark");
             }}
           >
+           <img src={BookmarkIcond} alt="bookmark" />
             Bookmarks
           </button>
           <button className="navbar_login" onClick={AddStoryFun}>

@@ -24,6 +24,8 @@ import { useNavigate } from "react-router-dom";
 import ScaleUpEffect from "../../services/effects/ScaleUp";
 import CopiedEffect from "../../services/effects/CopiEffect";
 import showToast from "../../services/toast/Toast";
+import Mute from "../../assets/mute.png"
+import UnMute from "../../assets/unmute.png"
 export default function ViewStory({
   close,
   storyId,
@@ -198,6 +200,7 @@ export default function ViewStory({
   };
 
   const rightButtonFun = () => {
+     dispatch(addItem(currentSlideIndex))
     setCurrentSlideIndex((pre) => {
       if (pre < localSlides.length - 1) {
         return pre + 1;
@@ -385,10 +388,7 @@ export default function ViewStory({
         throw new Error("Failed to fetch the file. Status: " + response.status);
       }
       const extension = fileUrl.split(".").pop().toLowerCase();
-      const fileName = `${localSlides[currentSlideIndex].heading}${
-        extension[extension.length - 1]
-      }`;
-
+      const fileName = `${localSlides[currentSlideIndex].heading}${extension}`;
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -404,6 +404,9 @@ export default function ViewStory({
       showToast("Can't download CORS restricted", false);
     }
   };
+
+  const [mute, setMute]=useState(false)
+
 
   return (
     <>
@@ -461,7 +464,7 @@ export default function ViewStory({
               src={localSlides[currentSlideIndex].link}
               controls={false}
               autoPlay
-              muted
+              muted={mute}
               loop={false}
               onLoadedData={handleVideoLoad}
             />
@@ -486,6 +489,18 @@ export default function ViewStory({
                 onClick={handleClose}
                 src={VSCrossIcon}
               />
+             
+             {localSlides[currentSlideIndex]?.mediaType === "video" ?    <img
+                className="viewstory_share"
+                alt="share"
+                style={{ cursor: "pointer" }}
+                onClick={()=>{
+                  setMute(!mute)
+                }}
+                src={mute? Mute:UnMute}
+              />:<></>}
+          
+
               <img
                 className="viewstory_share"
                 alt="share"

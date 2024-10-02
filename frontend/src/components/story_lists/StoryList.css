@@ -25,6 +25,14 @@
   font-style: normal;
   line-height: 4vh;
 }
+.storylist_heading button{
+  border: none;
+  transition: transform 0.3s ease-in-out;
+}
+.storylist_heading button:hover{
+   cursor: pointer;
+   transform: scale(1.1);
+}
 
 .storylist_box {
   display: grid;

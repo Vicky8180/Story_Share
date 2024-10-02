@@ -36,7 +36,7 @@
   background-color: rgba(255, 115, 115, 1);
   color: white;
   min-width: 135px;
-
+  display: flex;
   align-items: center;
   text-align: center;
   overflow: hidden;
@@ -49,7 +49,11 @@
   padding-left: 10px;
   padding-right: 10px;
 }
-
+.navbar_register img{
+  width: 2vh;
+  height: 2.8vh;
+  margin-right: 1vh;
+}
 .navbar_login {
   height: 5vh;
   border-radius: 20px;
@@ -76,18 +80,19 @@
 }
 
 .navbar_logout {
+
+
   position: absolute;
   background-color: white;
-  width: 200px;
-  height: 150px;
-  top: 80px;
+  width: 23vh;
+  height: 17vh;
+  top: 7.5vh;
   right: 15px;
   align-items: center;
   text-align: center;
-  padding-top: 30px;
+  padding-top: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
-  /* background-color:gba(255, 255, 255, 1); */
   z-index: 1002;
 }
 .navbar_logout div {

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MobileNavbar from "../components/navbar/MobileNavbar";
 import showToast from "../services/toast/Toast";
+import LeftArrow from "../assets/leftArrow.png"
 import UnAuthorizedPage from "../components/auth/UnAuthrished/UnAuthrishdPage";
 export default function BookmarkPage() {
   const videoRefs = useRef([]);
@@ -89,15 +90,14 @@ export default function BookmarkPage() {
           <MobileNavbar />
           <div className="storylist_container">
             <div className="storylist_heading">
-              <spna
-                style={{ position: "relative", right: "45vh" }}
+              <button
+                style={{ position: "relative", curser:"pointer",  display:"inlineFlex", fontSize:"2vh", borderRadius:"2.5vh",color:"white", paddingTop:"4px", paddingBottom:"4px", paddingLeft:"10px",paddingRight:"10px" ,backgroundColor:"rgba(115, 171, 255, 1)", right: "4vh" }}
                 onClick={() => {
                   navigate("/admin");
                 }}
               >
-                {" "}
-                =={" "}
-              </spna>
+              Go Back
+              </button>
               Your Bookmakrs
             </div>
             <div className="storylist_box">
